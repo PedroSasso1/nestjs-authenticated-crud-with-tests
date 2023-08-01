@@ -76,18 +76,32 @@ describe('Despesa Entity - Unit Tests', () => {
 
   describe('should invalidate createdBy', () => {
     it('should be number', () => {
-      const invalidCreatedBy: any = '';
+      const invalidTypeCreatedBy: any = '';
       const invalidDespesaProps: DespesaProps = {
         ...validDespesa,
-        createdBy: invalidCreatedBy,
+        createdBy: invalidTypeCreatedBy,
       };
       expect(() => new Despesa(invalidDespesaProps)).toThrow();
     });
   });
 
   describe('should invalidate value', () => {
-    it.todo('should be number');
-    it.todo("shouldn't be empty");
+    it('should be number', () => {
+      const invalidTypeValue: any = '';
+      const invalidDespesaProps: DespesaProps = {
+        ...validDespesa,
+        value: invalidTypeValue,
+      };
+      expect(() => new Despesa(invalidDespesaProps)).toThrow();
+    });
+    it("shouldn't be less than 0", () => {
+      const invalidMinValue = 0;
+      const invalidDespesaProps: DespesaProps = {
+        ...validDespesa,
+        value: invalidMinValue,
+      };
+      expect(() => new Despesa(invalidDespesaProps)).toThrow();
+    });
   });
 
   it.todo('should create valid instance of Despesa');

@@ -42,6 +42,8 @@ export class Despesa {
   @IsNumber()
   createdBy: number;
 
+  @IsNumber()
+  @Min(0.01)
   value: number;
 
   private validator() {

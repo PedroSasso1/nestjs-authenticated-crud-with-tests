@@ -75,8 +75,14 @@ describe('Despesa Entity - Unit Tests', () => {
   });
 
   describe('should invalidate createdBy', () => {
-    it.todo('should be number');
-    it.todo("shouldn't be empty");
+    it('should be number', () => {
+      const invalidCreatedBy: any = '';
+      const invalidDespesaProps: DespesaProps = {
+        ...validDespesa,
+        createdBy: invalidCreatedBy,
+      };
+      expect(() => new Despesa(invalidDespesaProps)).toThrow();
+    });
   });
 
   describe('should invalidate value', () => {

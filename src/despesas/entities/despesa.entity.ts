@@ -7,6 +7,7 @@ import {
   Min,
   validateSync,
 } from 'class-validator';
+import { Entity } from 'src/@shared/entity-contract';
 
 export type DespesaProps = {
   id: number;
@@ -15,7 +16,7 @@ export type DespesaProps = {
   createdBy: number;
   value: number;
 };
-export class Despesa {
+export class Despesa implements Entity {
   constructor(props: DespesaProps) {
     this.id = props.id;
     this.description = props.description;

@@ -5,13 +5,14 @@ import {
   IsString,
   validateSync,
 } from 'class-validator';
+import { Entity } from 'src/@shared/entity-contract';
 
 export type UserProps = {
   id: number;
   email: string;
 };
 
-export class User {
+export class User implements Entity {
   constructor(props: UserProps) {
     this.id = props.id;
     this.email = props.email;

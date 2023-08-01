@@ -43,5 +43,10 @@ describe('User Entity - Unit Tests', () => {
     });
   });
 
-  test.todo('should create a valid instance of User');
+  test('should create a valid instance of User', () => {
+    const user = new User(validUser);
+
+    expect(user.id).toBe(validUser.id);
+    expect(user.email).toBe(validUser.email);
+  });
 });

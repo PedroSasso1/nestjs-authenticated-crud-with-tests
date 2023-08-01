@@ -8,13 +8,6 @@ import {
   validateSync,
 } from 'class-validator';
 
-// Na entidade despesas, deverá conter:
-// ● Id
-// ● Descrição (descrição da despesa)
-// ● Data (data de quando ocorreu a despesa)
-// ● Usuário (usuário dono da despesa, um relacionamento com a tabela de Usuários)
-// ● Valor (valor em reais da despesa)
-
 export type DespesaProps = {
   id: number;
   description: string;

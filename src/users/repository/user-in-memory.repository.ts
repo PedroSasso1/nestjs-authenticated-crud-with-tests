@@ -1,7 +1,16 @@
-import InMemoryRepository from 'src/@shared/in-memory.repository';
+import InMemoryRepository from '../../@shared/in-memory.repository';
 import { User } from '../entities/user.entity';
 import UserRepository from './user.repository';
 
-export class DespesaInMemoryRepository
+export class UserInMemoryRepository
   extends InMemoryRepository<User>
-  implements UserRepository {}
+  implements UserRepository
+{
+  async findByEmail(email: string): Promise<User> {
+    const item = this.items.find((item) => item.email === email);
+    if (!item) {
+      throw new Error(`Entity not found using Email ${email}`);
+    }
+    return item;
+  }
+}

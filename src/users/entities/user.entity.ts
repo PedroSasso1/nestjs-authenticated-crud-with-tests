@@ -1,4 +1,10 @@
-import { IsNumber, validateSync } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  validateSync,
+} from 'class-validator';
 
 export type UserProps = {
   id: number;
@@ -13,6 +19,10 @@ export class User {
 
   @IsNumber()
   id: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsEmail()
   email: string;
 
   private validator() {

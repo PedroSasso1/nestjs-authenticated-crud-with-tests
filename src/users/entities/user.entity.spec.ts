@@ -17,9 +17,30 @@ describe('User Entity - Unit Tests', () => {
   });
 
   describe('should invalidate email', () => {
-    test.todo('should be string');
-    test.todo("shouldn't be empty");
-    test.todo('should be a valid email');
+    test('should be string', () => {
+      const invalidTypeEmail: any = 0;
+      const invalidUserProps: UserProps = {
+        ...validUser,
+        email: invalidTypeEmail,
+      };
+      expect(() => new User(invalidUserProps)).toThrow();
+    });
+    test("shouldn't be empty", () => {
+      const invalidEmptyEmail = '';
+      const invalidUserProps: UserProps = {
+        ...validUser,
+        email: invalidEmptyEmail,
+      };
+      expect(() => new User(invalidUserProps)).toThrow();
+    });
+    test('should be a valid email', () => {
+      const invalidEmail = 'email';
+      const invalidUserProps: UserProps = {
+        ...validUser,
+        email: invalidEmail,
+      };
+      expect(() => new User(invalidUserProps)).toThrow();
+    });
   });
 
   test.todo('should create a valid instance of User');

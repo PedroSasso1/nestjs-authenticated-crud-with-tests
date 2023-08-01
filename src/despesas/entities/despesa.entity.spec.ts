@@ -10,8 +10,31 @@ describe('Despesa Entity - Unit Tests', () => {
   });
 
   describe('should invalidate description', () => {
-    it.todo('should be string');
-    it.todo("shouldn't pass 191 string length");
+    const invalidDespesaProps: any = { id: 0 };
+    it('should be string', () => {
+      const invalidTypeDescription: any = 0;
+      expect(
+        () =>
+          new Despesa({
+            ...invalidDespesaProps,
+            description: invalidTypeDescription,
+          }),
+      ).toThrow();
+    });
+    it("shouldn't pass 191 string length", () => {
+      let invalidLengthDescription = '';
+      for (let i = 0; i < 192; i++) {
+        invalidLengthDescription += 'a';
+      }
+
+      expect(
+        () =>
+          new Despesa({
+            ...invalidDespesaProps,
+            description: invalidLengthDescription,
+          }),
+      ).toThrow();
+    });
   });
 
   describe('should invalidate createdAt', () => {

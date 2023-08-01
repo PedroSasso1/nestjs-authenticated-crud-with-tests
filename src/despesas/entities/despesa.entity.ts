@@ -1,7 +1,6 @@
+import { IsNumber, IsString, MaxLength, validateSync } from 'class-validator';
+
 // Na entidade despesas, deverá conter:
-
-import { IsNotEmpty, IsNumber, validateSync } from 'class-validator';
-
 // ● Id
 // ● Descrição (descrição da despesa)
 // ● Data (data de quando ocorreu a despesa)
@@ -23,6 +22,9 @@ export class Despesa {
 
   @IsNumber()
   id: number;
+
+  @IsString()
+  @MaxLength(191)
   description: string;
   createdAt: Date;
   createdBy: number;

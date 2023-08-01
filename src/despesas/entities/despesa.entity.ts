@@ -1,4 +1,12 @@
-import { IsNumber, IsString, MaxLength, validateSync } from 'class-validator';
+import {
+  IsDate,
+  IsNumber,
+  IsString,
+  MaxDate,
+  MaxLength,
+  Min,
+  validateSync,
+} from 'class-validator';
 
 // Na entidade despesas, deverá conter:
 // ● Id
@@ -26,14 +34,22 @@ export class Despesa {
   @IsString()
   @MaxLength(191)
   description: string;
+
+  @IsDate()
+  @MaxDate(new Date())
   createdAt: Date;
+
+  @IsNumber()
   createdBy: number;
+
   value: number;
 
   private validator() {
     const errors = validateSync(this)
       .map(({ constraints }) => Object.values(constraints).join(';'))
       .join('');
+
+    console.log(errors);
 
     if (errors.length > 0) {
       throw new Error(errors);

@@ -1,22 +1,31 @@
-import { Despesa } from './despesa.entity';
+import { Despesa, DespesaProps } from './despesa.entity';
 
+const validDespesa: DespesaProps = {
+  id: 1,
+  description: 'despesa description',
+  createdAt: new Date(),
+  createdBy: 1,
+  value: 10,
+};
 describe('Despesa Entity - Unit Tests', () => {
   describe('should invalidate id', () => {
     it('should be number', () => {
       const invalidId: any = '';
-      const invalidDespesaProps: any = { id: invalidId };
+      const invalidDespesaProps: DespesaProps = {
+        ...validDespesa,
+        id: invalidId,
+      };
       expect(() => new Despesa(invalidDespesaProps)).toThrow();
     });
   });
 
   describe('should invalidate description', () => {
-    const invalidDespesaProps: any = { id: 0 };
     it('should be string', () => {
       const invalidTypeDescription: any = 0;
       expect(
         () =>
           new Despesa({
-            ...invalidDespesaProps,
+            ...validDespesa,
             description: invalidTypeDescription,
           }),
       ).toThrow();
@@ -30,7 +39,7 @@ describe('Despesa Entity - Unit Tests', () => {
       expect(
         () =>
           new Despesa({
-            ...invalidDespesaProps,
+            ...validDespesa,
             description: invalidLengthDescription,
           }),
       ).toThrow();
@@ -38,8 +47,31 @@ describe('Despesa Entity - Unit Tests', () => {
   });
 
   describe('should invalidate createdAt', () => {
-    it.todo('createdAt must be date');
-    it.todo("createdAt can't be future");
+    it('createdAt must be date', () => {
+      const invalidTypeCreatedAt: any = 0;
+      expect(
+        () =>
+          new Despesa({
+            ...validDespesa,
+            createdAt: invalidTypeCreatedAt,
+          }),
+      ).toThrow();
+    });
+    it("createdAt can't be future", () => {
+      const now = new Date();
+      jest.useFakeTimers();
+      const nextYear = now.getFullYear() + 1;
+      const future = new Date();
+      future.setFullYear(nextYear);
+      expect(
+        () =>
+          new Despesa({
+            ...validDespesa,
+            createdAt: future,
+          }),
+      ).toThrow();
+      jest.useRealTimers();
+    });
   });
 
   describe('should invalidate createdBy', () => {

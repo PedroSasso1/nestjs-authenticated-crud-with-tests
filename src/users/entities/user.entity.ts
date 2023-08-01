@@ -13,7 +13,8 @@ export type UserProps = {
 
 export class User {
   constructor(props: UserProps) {
-    Object.assign(this, props);
+    this.id = props.id;
+    this.email = props.email;
     this.validator();
   }
 

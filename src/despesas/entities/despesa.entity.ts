@@ -17,7 +17,11 @@ export type DespesaProps = {
 };
 export class Despesa {
   constructor(props: DespesaProps) {
-    Object.assign(this, props);
+    this.id = props.id;
+    this.description = props.description;
+    this.createdAt = props.createdAt;
+    this.createdBy = props.createdBy;
+    this.value = props.value;
     this.validator();
   }
 

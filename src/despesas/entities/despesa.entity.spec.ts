@@ -104,5 +104,13 @@ describe('Despesa Entity - Unit Tests', () => {
     });
   });
 
-  it.todo('should create valid instance of Despesa');
+  it('should create valid instance of Despesa', () => {
+    const despesa = new Despesa(validDespesa);
+
+    expect(despesa.id).toBe(validDespesa.id);
+    expect(despesa.description).toBe(validDespesa.description);
+    expect(despesa.createdAt).toBe(validDespesa.createdAt);
+    expect(despesa.createdBy).toBe(validDespesa.createdBy);
+    expect(despesa.value).toBe(validDespesa.value);
+  });
 });

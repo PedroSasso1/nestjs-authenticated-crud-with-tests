@@ -51,8 +51,6 @@ export class Despesa {
       .map(({ constraints }) => Object.values(constraints).join(';'))
       .join('');
 
-    console.log(errors);
-
     if (errors.length > 0) {
       throw new Error(errors);
     }

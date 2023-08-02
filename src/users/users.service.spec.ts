@@ -5,6 +5,7 @@ import { validCreateUserDto } from '../../test/mocks/user.mocks';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { v4 as uuidV4 } from 'uuid';
 import { isUUID } from 'class-validator';
+import * as bcrypt from 'bcrypt';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -24,8 +25,13 @@ describe('UsersService', () => {
   it('should create a new user', async () => {
     const createUserDto: CreateUserDto = validCreateUserDto;
     const newId = await service.create(createUserDto);
-    expect(service.items[0]).toStrictEqual({ ...createUserDto, id: newId });
+    const user = service.inMemoryUsersTable[0];
+
+    expect(createUserDto.email).toBe(user.email);
     expect(isUUID(newId, 4)).toBeTruthy();
+    expect(
+      bcrypt.compareSync(createUserDto.password, user.password),
+    ).toBeTruthy();
   });
 
   it('should throw error when user not found', async () => {
@@ -38,15 +44,26 @@ describe('UsersService', () => {
   it('should find a user by id', async () => {
     const createUserDto: CreateUserDto = validCreateUserDto;
     const newId = await service.create(createUserDto);
-    const foundEntity = await service.findOne(newId);
-    expect({ ...createUserDto, id: newId }).toStrictEqual(foundEntity);
+    const foundUser = await service.findOne(newId);
+
+    expect(createUserDto.email).toBe(foundUser.email);
+    expect(isUUID(newId, 4)).toBeTruthy();
+    expect(
+      bcrypt.compareSync(createUserDto.password, foundUser.password),
+    ).toBeTruthy();
   });
 
   it('should find all users', async () => {
     const createUserDto: CreateUserDto = validCreateUserDto;
     const newId = await service.create(createUserDto);
     const users = await service.findAll();
-    expect(users).toStrictEqual([{ ...createUserDto, id: newId }]);
+    const [foundUser] = users;
+
+    expect(createUserDto.email).toBe(foundUser.email);
+    expect(isUUID(newId, 4)).toBeTruthy();
+    expect(
+      bcrypt.compareSync(createUserDto.password, foundUser.password),
+    ).toBeTruthy();
   });
 
   it('should throw error on update when user not found', async () => {
@@ -69,7 +86,7 @@ describe('UsersService', () => {
       password: 'new password',
     };
     await service.update(updatedEntity);
-    expect(updatedEntity).toStrictEqual(service.items[0]);
+    expect(updatedEntity).toStrictEqual(service.inMemoryUsersTable[0]);
   });
 
   it('should throw error on delete when user not found', async () => {
@@ -83,6 +100,6 @@ describe('UsersService', () => {
     const createUserDto: CreateUserDto = validCreateUserDto;
     const newId = await service.create(createUserDto);
     await service.remove(newId);
-    expect(service.items).toHaveLength(0);
+    expect(service.inMemoryUsersTable).toHaveLength(0);
   });
 });

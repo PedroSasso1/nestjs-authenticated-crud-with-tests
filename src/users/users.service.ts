@@ -3,8 +3,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { v4 as uuidV4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
-import { isEmpty } from 'class-validator';
-import { UserValidationException } from '../errors/user-validation-exception';
 import { UserExistsException } from '../errors/user-exists-exception';
 
 @Injectable()
@@ -13,15 +11,16 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const newId = uuidV4();
-    const hashedPassword = await this._getHashedPassword(
-      createUserDto.password,
-    );
-
     const user = new User({
       id: newId,
       email: createUserDto.email,
-      password: hashedPassword,
+      password: createUserDto.password,
     });
+
+    const hashedPassword = await this._getHashedPassword(
+      createUserDto.password,
+    );
+    user.password = hashedPassword;
 
     const userByEmail = await this.findOneByEmail(createUserDto.email);
 
@@ -54,11 +53,6 @@ export class UsersService {
   }
 
   protected async _getHashedPassword(password: string) {
-    if (isEmpty(password.length)) {
-      throw new UserValidationException(
-        "Error on User Service - password can't be empty",
-      );
-    }
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(password, salt);

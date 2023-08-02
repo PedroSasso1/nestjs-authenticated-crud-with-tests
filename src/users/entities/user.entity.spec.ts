@@ -72,7 +72,7 @@ describe('User Entity - Unit Tests', () => {
       const invalidEmptyPassword = '';
       const invalidUserProps: UserProps = {
         ...validUserMock,
-        email: invalidEmptyPassword,
+        password: invalidEmptyPassword,
       };
       expect(() => new User(invalidUserProps)).toThrow(UserValidationException);
     });

@@ -10,17 +10,23 @@ export class UsersService {
   inMemoryUsersTable: Partial<User>[] = [];
 
   async create(createUserDto: CreateUserDto) {
-    const newId = uuidV4();
-    const hashedPassword = await this._getHashedPassword(
-      createUserDto.password,
-    );
+    try {
+      const newId = uuidV4();
+      const hashedPassword = await this._getHashedPassword(
+        createUserDto.password,
+      );
 
-    this.inMemoryUsersTable.push({
-      ...createUserDto,
-      id: newId,
-      password: hashedPassword,
-    });
-    return newId;
+      const user = new User({
+        id: newId,
+        email: createUserDto.email,
+        password: hashedPassword,
+      });
+
+      this.inMemoryUsersTable.push(user);
+      return newId;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 
   async findAll() {
@@ -31,12 +37,36 @@ export class UsersService {
     return this._get(id);
   }
 
+  async findOneByEmail(email: string) {
+    const item = this.inMemoryUsersTable.find((item) => item.email === email);
+    if (!item) {
+      throw new Error(`User not found using Email ${email}`);
+    }
+    return item;
+  }
+
   async update(updateUserDto: UpdateUserDto) {
-    await this._get(updateUserDto.id);
-    const indexFound = this.inMemoryUsersTable.findIndex(
-      (i) => i.id === updateUserDto.id,
-    );
-    this.inMemoryUsersTable[indexFound] = updateUserDto;
+    try {
+      const { id, email, password } = await this._get(updateUserDto.id);
+      const newEmail = 'email' in updateUserDto ? updateUserDto.email : email;
+      const newPassword =
+        'password' in updateUserDto
+          ? await this._getHashedPassword(updateUserDto.password)
+          : password;
+
+      const user = new User({
+        id,
+        email: newEmail,
+        password: newPassword,
+      });
+
+      const indexFound = this.inMemoryUsersTable.findIndex(
+        (i) => i.id === updateUserDto.id,
+      );
+      this.inMemoryUsersTable[indexFound] = user;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 
   async remove(id: string) {
@@ -54,6 +84,9 @@ export class UsersService {
   }
 
   protected async _getHashedPassword(password: string) {
+    if (password.length <= 0) {
+      throw new Error("Error on User Service - password can't be empty");
+    }
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(password, salt);

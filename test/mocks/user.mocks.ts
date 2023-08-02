@@ -12,3 +12,8 @@ export const validCreateUserDto: CreateUserDto = {
   email: 'user@email.com',
   password: '123456',
 };
+
+export const invalidCreateUserDto: CreateUserDto = {
+  email: '',
+  password: '',
+};

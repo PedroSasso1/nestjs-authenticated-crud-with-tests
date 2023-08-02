@@ -5,6 +5,7 @@ import {
   IsUUID,
   validateSync,
 } from 'class-validator';
+import { UserValidationException } from '../../errors/user-validation-exception';
 
 export type UserProps = {
   id: string;
@@ -39,8 +40,9 @@ export class User {
       .map(({ constraints }) => Object.values(constraints).join(';'))
       .join('');
 
+    console.log(errors);
     if (errors.length > 0) {
-      throw new Error(errors);
+      throw new UserValidationException(errors);
     }
 
     return;

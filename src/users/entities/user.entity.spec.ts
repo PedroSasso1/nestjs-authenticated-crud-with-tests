@@ -1,3 +1,4 @@
+import { UserValidationException } from '../../errors/user-validation-exception';
 import { validUserMock } from '../../../test/mocks/user.mocks';
 import { User, UserProps } from './user.entity';
 
@@ -9,7 +10,7 @@ describe('User Entity - Unit Tests', () => {
         ...validUserMock,
         id: invalidTypeId,
       };
-      expect(() => new User(invalidUserProps)).toThrow();
+      expect(() => new User(invalidUserProps)).toThrow(UserValidationException);
     });
 
     test("shouldn't be empty", () => {
@@ -18,7 +19,7 @@ describe('User Entity - Unit Tests', () => {
         ...validUserMock,
         id: invalidEmptyId,
       };
-      expect(() => new User(invalidUserProps)).toThrow();
+      expect(() => new User(invalidUserProps)).toThrow(UserValidationException);
     });
 
     test('should be uuid v4', () => {
@@ -27,7 +28,7 @@ describe('User Entity - Unit Tests', () => {
         ...validUserMock,
         id: invalidUUID,
       };
-      expect(() => new User(invalidUserProps)).toThrow();
+      expect(() => new User(invalidUserProps)).toThrow(UserValidationException);
     });
   });
 
@@ -38,7 +39,7 @@ describe('User Entity - Unit Tests', () => {
         ...validUserMock,
         email: invalidTypeEmail,
       };
-      expect(() => new User(invalidUserProps)).toThrow();
+      expect(() => new User(invalidUserProps)).toThrow(UserValidationException);
     });
     test("shouldn't be empty", () => {
       const invalidEmptyEmail = '';
@@ -46,7 +47,7 @@ describe('User Entity - Unit Tests', () => {
         ...validUserMock,
         email: invalidEmptyEmail,
       };
-      expect(() => new User(invalidUserProps)).toThrow();
+      expect(() => new User(invalidUserProps)).toThrow(UserValidationException);
     });
     test('should be a valid email', () => {
       const invalidEmail = 'email';
@@ -54,7 +55,7 @@ describe('User Entity - Unit Tests', () => {
         ...validUserMock,
         email: invalidEmail,
       };
-      expect(() => new User(invalidUserProps)).toThrow();
+      expect(() => new User(invalidUserProps)).toThrow(UserValidationException);
     });
   });
 
@@ -65,7 +66,7 @@ describe('User Entity - Unit Tests', () => {
         ...validUserMock,
         password: invalidTypePassword,
       };
-      expect(() => new User(invalidUserProps)).toThrow();
+      expect(() => new User(invalidUserProps)).toThrow(UserValidationException);
     });
     test("shouldn't be empty", () => {
       const invalidEmptyPassword = '';
@@ -73,7 +74,7 @@ describe('User Entity - Unit Tests', () => {
         ...validUserMock,
         email: invalidEmptyPassword,
       };
-      expect(() => new User(invalidUserProps)).toThrow();
+      expect(() => new User(invalidUserProps)).toThrow(UserValidationException);
     });
   });
 

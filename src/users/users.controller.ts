@@ -3,9 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,8 +16,15 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    try {
+      return { id: await this.usersService.create(createUserDto) };
+    } catch (err) {
+      return {
+        errorMessage: err.message,
+        statusCode: err?.status || 500,
+      };
+    }
   }
 
   @Get()
@@ -27,16 +34,49 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    try {
+      return this.usersService.findOne(id);
+    } catch (err) {
+      return {
+        errorMessage: err.message,
+        statusCode: err?.status || 500,
+      };
+    }
   }
 
-  @Patch(':id')
+  @Get('email/:email')
+  findOneByEmail(@Param('email') email: string) {
+    try {
+      return this.usersService.findOneByEmail(email);
+    } catch (err) {
+      return {
+        errorMessage: err.message,
+        statusCode: err?.status || 500,
+      };
+    }
+  }
+
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    try {
+      return this.usersService.update({ ...updateUserDto, id });
+    } catch (err) {
+      return {
+        errorMessage: err.message,
+        statusCode: err?.status || 500,
+      };
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    try {
+      return this.usersService.remove(id);
+    } catch (err) {
+      return {
+        errorMessage: err.message,
+        statusCode: err?.status || 500,
+      };
+    }
   }
 }

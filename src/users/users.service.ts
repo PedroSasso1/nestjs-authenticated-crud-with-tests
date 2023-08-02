@@ -4,6 +4,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { v4 as uuidV4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
+import { isEmpty } from 'class-validator';
+import { UserValidationException } from '../errors/user-validation-exception';
+import { UserExistsException } from '../errors/user-exists-exception';
+import { UserNotFoundException } from '../errors/user-not-found-excpetion';
 
 @Injectable()
 export class UsersService {
@@ -22,10 +26,16 @@ export class UsersService {
         password: hashedPassword,
       });
 
+      const userByEmail = await this.findOneByEmail(createUserDto.email);
+
+      if (userByEmail) {
+        throw new UserExistsException('email is taken');
+      }
+
       this.inMemoryUsersTable.push(user);
       return newId;
-    } catch (err) {
-      throw new Error(err.message);
+    } catch (error) {
+      throw new UserValidationException(error.message);
     }
   }
 
@@ -38,35 +48,47 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string) {
-    const item = this.inMemoryUsersTable.find((item) => item.email === email);
-    if (!item) {
-      throw new Error(`User not found using Email ${email}`);
+    const user = this.inMemoryUsersTable.find((item) => item.email === email);
+    console.log(user);
+    if (!user) {
+      return null;
     }
-    return item;
+    return user;
   }
 
   async update(updateUserDto: UpdateUserDto) {
-    try {
-      const { id, email, password } = await this._get(updateUserDto.id);
-      const newEmail = 'email' in updateUserDto ? updateUserDto.email : email;
-      const newPassword =
-        'password' in updateUserDto
-          ? await this._getHashedPassword(updateUserDto.password)
-          : password;
+    const { id, email, password } = await this._get(updateUserDto.id);
+    let newEmail = email;
+    let newPassword = password;
 
-      const user = new User({
-        id,
-        email: newEmail,
-        password: newPassword,
-      });
-
-      const indexFound = this.inMemoryUsersTable.findIndex(
-        (i) => i.id === updateUserDto.id,
-      );
-      this.inMemoryUsersTable[indexFound] = user;
-    } catch (err) {
-      throw new Error(err.message);
+    if (updateUserDto.email && updateUserDto.email !== email) {
+      const userByEmail = await this.findOneByEmail(updateUserDto.email);
+      if (userByEmail) {
+        throw new UserExistsException('email is taken');
+      }
+      newEmail = updateUserDto.email;
     }
+
+    if (
+      updateUserDto.password &&
+      !bcrypt.compareSync(updateUserDto.password, password)
+    ) {
+      newPassword = await this._getHashedPassword(updateUserDto.password);
+    }
+    console.log(id);
+    console.log(newEmail);
+    console.log(newPassword);
+
+    const user = new User({
+      id,
+      email: newEmail,
+      password: newPassword,
+    });
+
+    const indexFound = this.inMemoryUsersTable.findIndex(
+      (i) => i.id === updateUserDto.id,
+    );
+    this.inMemoryUsersTable[indexFound] = user;
   }
 
   async remove(id: string) {
@@ -78,14 +100,16 @@ export class UsersService {
   protected async _get(id: string) {
     const item = this.inMemoryUsersTable.find((item) => item.id === id);
     if (!item) {
-      throw new Error(`User not found using ID ${id}`);
+      throw new UserNotFoundException(`User not found using ID ${id}`);
     }
     return item;
   }
 
   protected async _getHashedPassword(password: string) {
-    if (password.length <= 0) {
-      throw new Error("Error on User Service - password can't be empty");
+    if (isEmpty(password.length)) {
+      throw new UserValidationException(
+        "Error on User Service - password can't be empty",
+      );
     }
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);

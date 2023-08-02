@@ -10,17 +10,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/users/06d1513b-0c5a-4582-b647-f3611dd160fb
+GET http://localhost:3000/users/50c7a240-e3b1-4839-98fa-ff85b6fe02ae
 
 ###
-GET http://localhost:3000/users/email/user@email.com
-###
-PUT http://localhost:3000/users/06d1513b-0c5a-4582-b647-f3611dd160fb
-Content-Type: application/json
-
-{
-  "email":"user@email.com",
-  "password": "123456"
-}
-###
-DELETE http://localhost:3000/users/06d1513b-0c5a-4582-b647-f3611dd160fb
+GET http://localhost:3000/users/email/user@.com

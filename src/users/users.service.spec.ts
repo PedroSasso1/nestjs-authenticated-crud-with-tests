@@ -4,11 +4,11 @@ import {
   invalidCreateUserDto,
   validCreateUserDto,
 } from '../../test/mocks/user.mocks';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { v4 as uuidV4 } from 'uuid';
 import { isUUID } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import { UserValidationException } from '../errors/user-validation-exception';
+import { UserExistsException } from '../errors/user-exists-exception';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -26,7 +26,9 @@ describe('UsersService', () => {
   });
 
   it('should throw error on create when user has invalid props', async () => {
-    expect(() => service.create(invalidCreateUserDto)).rejects.toThrow();
+    expect(() => service.create(invalidCreateUserDto)).rejects.toThrow(
+      UserValidationException,
+    );
   });
   it('should create a new user', async () => {
     const newId = await service.create(validCreateUserDto);
@@ -39,11 +41,17 @@ describe('UsersService', () => {
     ).toBeTruthy();
   });
 
-  it('should throw error when user not found', async () => {
-    const notFoundId = uuidV4();
-    expect(() => service.findOne(notFoundId)).rejects.toThrow(
-      new Error(`User not found using ID ${notFoundId}`),
+  it('should throw error on create when creating a new user with existent email', async () => {
+    await service.create(validCreateUserDto);
+    expect(service.create(validCreateUserDto)).rejects.toThrow(
+      UserExistsException,
     );
+  });
+
+  it('should throw error on find by id when user not found', async () => {
+    const notFoundId = uuidV4();
+    const user = await service.findOne(notFoundId);
+    expect(user).toBeNull();
   });
 
   it('should find a user by id', async () => {
@@ -57,10 +65,10 @@ describe('UsersService', () => {
     ).toBeTruthy();
   });
 
-  it('should throw error when user not found by email', async () => {
+  it('should throw error on find by email when user not found', async () => {
     const notFoundEmail = 'test@email.com';
     const user = await service.findOneByEmail(notFoundEmail);
-    expect(user).toBeFalsy();
+    expect(user).toBeNull();
   });
 
   it('should find a user by email', async () => {
@@ -84,69 +92,5 @@ describe('UsersService', () => {
     expect(
       bcrypt.compareSync(validCreateUserDto.password, foundUser.password),
     ).toBeTruthy();
-  });
-
-  it('should throw error on update when user not found', async () => {
-    const notFoundId = uuidV4();
-    const createUserDto: UpdateUserDto = {
-      ...validCreateUserDto,
-      id: notFoundId,
-    };
-    expect(() => service.update(createUserDto)).rejects.toThrow(
-      new Error(`User not found using ID ${notFoundId}`),
-    );
-  });
-
-  it('should throw error on update when updateDto has invalid password', async () => {
-    const newId = await service.create(validCreateUserDto);
-    const updatedEntity = {
-      id: newId,
-      password: '',
-    };
-
-    expect(() => service.update(updatedEntity)).rejects.toThrow();
-  });
-
-  it('should throw error on update when updateDto has invalid email', async () => {
-    const newId = await service.create(validCreateUserDto);
-    const updatedEntity = {
-      id: newId,
-      email: 'email',
-    };
-
-    expect(() => service.update(updatedEntity)).rejects.toThrow(
-      UserValidationException,
-    );
-  });
-
-  it('should update a user', async () => {
-    const newId = await service.create(validCreateUserDto);
-    const updatedEntity = {
-      id: newId,
-      name: 'new name',
-      password: 'new password',
-    };
-    await service.update(updatedEntity);
-
-    const user = service.inMemoryUsersTable[0];
-
-    expect(validCreateUserDto.email).toBe(user.email);
-    expect(isUUID(user.id, 4)).toBeTruthy();
-    expect(
-      bcrypt.compareSync(updatedEntity.password, user.password),
-    ).toBeTruthy();
-  });
-
-  it('should throw error on delete when user not found', async () => {
-    const notFoundId = uuidV4();
-    expect(() => service.remove(notFoundId)).rejects.toThrow(
-      new Error(`User not found using ID ${notFoundId}`),
-    );
-  });
-
-  it('should delete a user', async () => {
-    const newId = await service.create(validCreateUserDto);
-    await service.remove(newId);
-    expect(service.inMemoryUsersTable).toHaveLength(0);
   });
 });

@@ -1,31 +1,38 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsNumber,
   IsString,
+  IsUUID,
   validateSync,
 } from 'class-validator';
-import { Entity } from 'src/@shared/entity-contract';
 
 export type UserProps = {
-  id: number;
+  id: string;
   email: string;
+  password: string;
 };
 
-export class User implements Entity {
+export class User {
   constructor(props: UserProps) {
     this.id = props.id;
     this.email = props.email;
+    this.password = props.password;
     this.validator();
   }
 
-  @IsNumber()
-  id: number;
+  @IsString()
+  @IsNotEmpty()
+  @IsUUID(4)
+  id: string;
 
   @IsString()
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 
   private validator() {
     const errors = validateSync(this)

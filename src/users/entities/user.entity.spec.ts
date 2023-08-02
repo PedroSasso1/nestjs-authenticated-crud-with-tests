@@ -1,16 +1,31 @@
+import { validUserMock } from '../../../test/mocks/user.mocks';
 import { User, UserProps } from './user.entity';
 
-const validUser: UserProps = {
-  id: 1,
-  email: 'user@email.com',
-};
 describe('User Entity - Unit Tests', () => {
   describe('should invalidate id', () => {
-    test('should be number', () => {
-      const invalidTypeId: any = '';
+    test('should be string', () => {
+      const invalidTypeId: any = 0;
       const invalidUserProps: UserProps = {
-        ...validUser,
+        ...validUserMock,
         id: invalidTypeId,
+      };
+      expect(() => new User(invalidUserProps)).toThrow();
+    });
+
+    test("shouldn't be empty", () => {
+      const invalidEmptyId = '';
+      const invalidUserProps: UserProps = {
+        ...validUserMock,
+        id: invalidEmptyId,
+      };
+      expect(() => new User(invalidUserProps)).toThrow();
+    });
+
+    test('should be uuid v4', () => {
+      const invalidUUID = 'invalid uuid';
+      const invalidUserProps: UserProps = {
+        ...validUserMock,
+        id: invalidUUID,
       };
       expect(() => new User(invalidUserProps)).toThrow();
     });
@@ -20,7 +35,7 @@ describe('User Entity - Unit Tests', () => {
     test('should be string', () => {
       const invalidTypeEmail: any = 0;
       const invalidUserProps: UserProps = {
-        ...validUser,
+        ...validUserMock,
         email: invalidTypeEmail,
       };
       expect(() => new User(invalidUserProps)).toThrow();
@@ -28,7 +43,7 @@ describe('User Entity - Unit Tests', () => {
     test("shouldn't be empty", () => {
       const invalidEmptyEmail = '';
       const invalidUserProps: UserProps = {
-        ...validUser,
+        ...validUserMock,
         email: invalidEmptyEmail,
       };
       expect(() => new User(invalidUserProps)).toThrow();
@@ -36,17 +51,36 @@ describe('User Entity - Unit Tests', () => {
     test('should be a valid email', () => {
       const invalidEmail = 'email';
       const invalidUserProps: UserProps = {
-        ...validUser,
+        ...validUserMock,
         email: invalidEmail,
       };
       expect(() => new User(invalidUserProps)).toThrow();
     });
   });
 
-  test('should create a valid instance of User', () => {
-    const user = new User(validUser);
+  describe('should invalidate password', () => {
+    test('should be string', () => {
+      const invalidTypePassword: any = 0;
+      const invalidUserProps: UserProps = {
+        ...validUserMock,
+        password: invalidTypePassword,
+      };
+      expect(() => new User(invalidUserProps)).toThrow();
+    });
+    test("shouldn't be empty", () => {
+      const invalidEmptyPassword = '';
+      const invalidUserProps: UserProps = {
+        ...validUserMock,
+        email: invalidEmptyPassword,
+      };
+      expect(() => new User(invalidUserProps)).toThrow();
+    });
+  });
 
-    expect(user.id).toBe(validUser.id);
-    expect(user.email).toBe(validUser.email);
+  test('should create a valid instance of User', () => {
+    const user = new User(validUserMock);
+
+    expect(user.id).toBe(validUserMock.id);
+    expect(user.email).toBe(validUserMock.email);
   });
 });

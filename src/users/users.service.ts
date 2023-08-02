@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { v4 as uuidV4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  items: Partial<User>[] = [];
+
+  async create(createUserDto: CreateUserDto) {
+    const newId = uuidV4();
+    this.items.push({ ...createUserDto, id: newId });
+    return newId;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return this.items;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return this._get(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(updateUserDto: UpdateUserDto) {
+    await this._get(updateUserDto.id);
+    const indexFound = this.items.findIndex((i) => i.id === updateUserDto.id);
+    this.items[indexFound] = updateUserDto;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this._get(id);
+    const indexFound = this.items.findIndex((i) => i.id === id);
+    this.items.splice(indexFound, 1);
+  }
+
+  protected async _get(id: string) {
+    const item = this.items.find((item) => item.id === id);
+    if (!item) {
+      throw new Error(`User not found using ID ${id}`);
+    }
+    return item;
   }
 }

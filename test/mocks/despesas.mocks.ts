@@ -13,13 +13,12 @@ export const validDespesaMock: DespesaProps = {
 
 export const createDespesaDtoMock: CreateDespesaDto = {
   description: 'despesa description',
-  createdAt: new Date(),
+  createdAt: new Date().toISOString(),
   createdBy: uuidV4(),
   value: 10,
 };
 
 export const updateDespesaDtoMock: UpdateDespesaDto = {
-  id: uuidV4(),
   description: 'new description',
   value: 50,
 };

@@ -1,6 +1,6 @@
 export class CreateDespesaDto {
   description: string;
-  createdAt: Date;
+  createdAt: string;
   createdBy: string;
   value: number;
 }

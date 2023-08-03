@@ -4,4 +4,19 @@ export class Util {
 
     return date;
   }
+
+  static parseDateString(date: string) {
+    return new Date(Date.parse(date));
+  }
+
+  static formatNumberToCurrency(
+    num: number,
+    locale = 'pt-BR',
+    currency = 'BRL',
+  ) {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+    }).format(num);
+  }
 }

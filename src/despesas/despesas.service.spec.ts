@@ -13,6 +13,7 @@ import {
 } from '../../test/mocks/despesas.mocks';
 import { DespesaNotFoundException } from './errors/despesa-not-found.exception';
 import { UpdateDespesaDto } from './dto/update-despesa.dto';
+import { Util } from '../util/util';
 
 describe('DespesasService', () => {
   let service: DespesasService;
@@ -36,7 +37,7 @@ describe('DespesasService', () => {
   it("should throw user not found on create despesa when user doesn't exist", async () => {
     const createdBy = uuidV4();
     const despesaDto: CreateDespesaDto = {
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
       createdBy,
       description: 'new despesa',
       value: 10.0,
@@ -59,7 +60,7 @@ describe('DespesasService', () => {
     const future = new Date();
     future.setFullYear(nextYear);
     const despesaDto: CreateDespesaDto = {
-      createdAt: future,
+      createdAt: future.toISOString(),
       createdBy,
       description: invalidDesc,
       value: -1,
@@ -85,7 +86,7 @@ describe('DespesasService', () => {
 
     expect(service.despesasInMemoryTable).toHaveLength(1);
     expect(newId).toBe(createdDespesa.id);
-    expect(createdDespesa.createdAt).toBe(despesaDto.createdAt);
+    expect(createdDespesa.createdAt.toISOString()).toBe(despesaDto.createdAt);
     expect(createdDespesa.createdBy).toBe(despesaDto.createdBy);
     expect(createdDespesa.description).toBe(despesaDto.description);
     expect(createdDespesa.value).toBe(despesaDto.value);
@@ -101,18 +102,19 @@ describe('DespesasService', () => {
     };
 
     const newId = await service.create(despesaDto);
-    const [despesa] = await service.findAll();
+    const [despesa] = await service.findAll(createdBy);
 
     expect(newId).toBe(despesa.id);
     expect(despesa.createdAt).toBe(despesaDto.createdAt);
     expect(despesa.createdBy).toBe(despesaDto.createdBy);
     expect(despesa.description).toBe(despesaDto.description);
-    expect(despesa.value).toBe(despesaDto.value);
+    expect(despesa.value).toBe(Util.formatNumberToCurrency(despesaDto.value));
   });
 
   it("should throw error on find one by id when despesa doesn't exist", async () => {
     const notFoundId = uuidV4();
-    expect(service.findOne(notFoundId)).rejects.toThrow(
+    const createdBy = uuidV4();
+    expect(service.findOne(notFoundId, createdBy)).rejects.toThrow(
       new DespesaNotFoundException(`Despesa not found with ID: ${notFoundId}`),
     );
   });
@@ -127,23 +129,24 @@ describe('DespesasService', () => {
     };
 
     const newId = await service.create(despesaDto);
-    const despesa = await service.findOne(newId);
+    const despesa = await service.findOne(newId, createdBy);
 
     expect(newId).toBe(despesa.id);
     expect(despesa.createdAt).toBe(despesaDto.createdAt);
     expect(despesa.createdBy).toBe(despesaDto.createdBy);
     expect(despesa.description).toBe(despesaDto.description);
-    expect(despesa.value).toBe(despesaDto.value);
+    expect(despesa.value).toBe(Util.formatNumberToCurrency(despesaDto.value));
   });
 
   it("should throw error on update when despesa doesn't exists", async () => {
     const updateDto = {
       ...updateDespesaDtoMock,
     };
-    expect(service.update(updateDto)).rejects.toThrow(
-      new DespesaNotFoundException(
-        `Despesa not found with ID: ${updateDto.id}`,
-      ),
+    const notFoundId = uuidV4();
+    const createdBy = uuidV4();
+
+    expect(service.update(notFoundId, updateDto, createdBy)).rejects.toThrow(
+      new DespesaNotFoundException(`Despesa not found with ID: ${notFoundId}`),
     );
   });
 
@@ -161,12 +164,11 @@ describe('DespesasService', () => {
     const invalidDesc: any = 0;
 
     const updateDto: UpdateDespesaDto = {
-      id: newId,
       description: invalidDesc,
       value: -1,
     };
 
-    expect(service.update(updateDto)).rejects.toThrow(
+    expect(service.update(newId, updateDto, createdBy)).rejects.toThrow(
       DespesasValidationException,
     );
   });
@@ -184,16 +186,15 @@ describe('DespesasService', () => {
 
     const updateDto = {
       ...updateDespesaDtoMock,
-      id: newId,
     };
 
-    await service.update(updateDto);
+    await service.update(newId, updateDto, createdBy);
 
     const updatedDespesa = service.despesasInMemoryTable[0];
 
     expect(service.despesasInMemoryTable).toHaveLength(1);
     expect(newId).toBe(updatedDespesa.id);
-    expect(updatedDespesa.createdAt).toStrictEqual(despesaDto.createdAt);
+    expect(updatedDespesa.createdAt.toISOString()).toBe(despesaDto.createdAt);
     expect(updatedDespesa.createdBy).toBe(despesaDto.createdBy);
     expect(updatedDespesa.description).toBe(updateDto.description);
     expect(updatedDespesa.value).toBe(updateDto.value);
@@ -201,7 +202,8 @@ describe('DespesasService', () => {
 
   it("should throw error on remove when despesa doesn't exist", async () => {
     const notFoundId = uuidV4();
-    expect(service.remove(notFoundId)).rejects.toThrow(
+    const createdBy = uuidV4();
+    expect(service.remove(notFoundId, createdBy)).rejects.toThrow(
       new DespesaNotFoundException(`Despesa not found with ID: ${notFoundId}`),
     );
   });
@@ -217,7 +219,7 @@ describe('DespesasService', () => {
 
     const newId = await service.create(despesaDto);
 
-    await service.remove(newId);
+    await service.remove(newId, createdBy);
 
     expect(service.despesasInMemoryTable).toHaveLength(0);
   });

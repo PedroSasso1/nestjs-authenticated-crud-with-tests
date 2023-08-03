@@ -14,3 +14,51 @@ GET http://localhost:3000/users/50c7a240-e3b1-4839-98fa-ff85b6fe02ae
 
 ###
 GET http://localhost:3000/users/email/user@.com
+
+###
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "username":"user@email.com",
+  "password": "123456"
+}
+
+
+### 
+POST http://localhost:3000/despesas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3M2MzZWNkNi0xYzQxLTQ0NDQtYjYzMi03NzkzNTJiN2I3ODkiLCJ1c2VybmFtZSI6InVzZXJAZW1haWwuY29tIiwiaWF0IjoxNjkxMDUyMjQ0LCJleHAiOjE2OTEwODgyNDR9.vfGcZVD8___GGoJ2gbnf9qWbV3_ims69DM1NYX-thPM
+
+{
+  "description": "despesa description",
+  "createdAt": "2023-08-03T07:20:00.597Z",
+  "createdBy": "73c3ecd6-1c41-4444-b632-779352b7b789",
+  "value": 10
+}
+
+### 
+GET http://localhost:3000/despesas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3M2MzZWNkNi0xYzQxLTQ0NDQtYjYzMi03NzkzNTJiN2I3ODkiLCJ1c2VybmFtZSI6InVzZXJAZW1haWwuY29tIiwiaWF0IjoxNjkxMDUyMjQ0LCJleHAiOjE2OTEwODgyNDR9.vfGcZVD8___GGoJ2gbnf9qWbV3_ims69DM1NYX-thPM
+
+
+###
+GET http://localhost:3000/despesas/7521e7de-4d43-4f35-95b1-a030673c7ddc
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3M2MzZWNkNi0xYzQxLTQ0NDQtYjYzMi03NzkzNTJiN2I3ODkiLCJ1c2VybmFtZSI6InVzZXJAZW1haWwuY29tIiwiaWF0IjoxNjkxMDUyMzcwLCJleHAiOjE2OTEwODgzNzB9.xaCALz4b6sEPEU-k5942wRvFQ_yJBUc79CNcWYRXe8M
+
+
+### 
+PUT http://localhost:3000/despesas/7521e7de-4d43-4f35-95b1-a030673c7ddc
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3M2MzZWNkNi0xYzQxLTQ0NDQtYjYzMi03NzkzNTJiN2I3ODkiLCJ1c2VybmFtZSI6InVzZXJAZW1haWwuY29tIiwiaWF0IjoxNjkxMDUyMjQ0LCJleHAiOjE2OTEwODgyNDR9.vfGcZVD8___GGoJ2gbnf9qWbV3_ims69DM1NYX-thPM
+
+{
+  "description": "despesa description",
+  "value": 10
+}
+###
+DELETE http://localhost:3000/despesas/5cd88b85-1d3c-45d9-9898-e50feac2c9e4
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3M2MzZWNkNi0xYzQxLTQ0NDQtYjYzMi03NzkzNTJiN2I3ODkiLCJ1c2VybmFtZSI6InVzZXJAZW1haWwuY29tIiwiaWF0IjoxNjkxMDUyMjQ0LCJleHAiOjE2OTEwODgyNDR9.vfGcZVD8___GGoJ2gbnf9qWbV3_ims69DM1NYX-thPM

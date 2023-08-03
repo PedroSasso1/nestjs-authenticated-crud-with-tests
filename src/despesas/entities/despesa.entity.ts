@@ -55,8 +55,8 @@ export class Despesa {
 
   private validator() {
     const errors = validateSync(this)
-      .map(({ constraints }) => Object.values(constraints).join(';'))
-      .join('');
+      .map(({ constraints }) => Object.values(constraints).join('; '))
+      .join('; ');
 
     if (errors.length > 0) {
       throw new DespesasValidationException(errors);

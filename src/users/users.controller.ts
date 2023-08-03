@@ -11,10 +11,10 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto) {
     try {
       return { id: await this.usersService.create(createUserDto) };
-    } catch (err) {
+    } catch (error) {
       return {
-        errorMessage: err.message,
-        statusCode: err?.status || 500,
+        errorMessage: error.message,
+        statusCode: error?.status || 500,
       };
     }
   }
@@ -33,10 +33,10 @@ export class UsersController {
         throw new UserNotFoundException(`User not found with ID: ${id}`);
       }
       return { id: user.id, email: user.email };
-    } catch (err) {
+    } catch (error) {
       return {
-        errorMessage: err.message,
-        statusCode: err?.status || 500,
+        errorMessage: error.message,
+        statusCode: error?.status || 500,
       };
     }
   }
@@ -49,10 +49,10 @@ export class UsersController {
         throw new UserNotFoundException(`User not found with email: ${email}`);
       }
       return { id: user.id, email: user.email };
-    } catch (err) {
+    } catch (error) {
       return {
-        errorMessage: err.message,
-        statusCode: err?.status || 500,
+        errorMessage: error.message,
+        statusCode: error?.status || 500,
       };
     }
   }

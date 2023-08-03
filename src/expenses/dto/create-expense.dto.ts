@@ -1,4 +1,4 @@
-export class CreateDespesaDto {
+export class CreateExpenseDto {
   description: string;
   createdAt: string;
   createdBy: string;

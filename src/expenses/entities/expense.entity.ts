@@ -10,18 +10,18 @@ import {
   Min,
   validateSync,
 } from 'class-validator';
-import { DespesasValidationException } from '../errors/despesas-validation.exception';
+import { ExpenseValidationException } from '../errors/expense-validation.exception';
 import { Util } from '../../util/util';
 
-export type DespesaProps = {
+export type ExpenseProps = {
   id: string;
   description: string;
   createdAt: Date;
   createdBy: string;
   value: number;
 };
-export class Despesa {
-  constructor(props: DespesaProps) {
+export class Expense {
+  constructor(props: ExpenseProps) {
     this.id = props.id;
     this.description = props.description;
     this.createdAt = props.createdAt;
@@ -59,7 +59,7 @@ export class Despesa {
       .join('; ');
 
     if (errors.length > 0) {
-      throw new DespesasValidationException(errors);
+      throw new ExpenseValidationException(errors);
     }
 
     return;

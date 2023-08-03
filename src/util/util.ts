@@ -1,4 +1,4 @@
-import { Despesa } from 'src/despesas/entities/despesa.entity';
+import { Expense } from 'src/expenses/entities/expense.entity';
 
 export class Util {
   static dateAddMinutes(date: Date, minutes = 1) {
@@ -22,27 +22,27 @@ export class Util {
     }).format(num);
   }
 
-  static getDespesaMailBody(despesa: Despesa) {
+  static getExpenseMailBody(expense: Expense) {
     const body = `<html>
     <body>
       <h1>Despesa cadastrada!</h1>
 
-      <p><span style="font-weight: bold">ID:</span> ${despesa.id}</p>
+      <p><span style="font-weight: bold">ID:</span> ${expense.id}</p>
       
       <p><span style="font-weight: bold">Descrição</span>: ${
-        despesa.description
+        expense.description
       }</p>
       
       <p><span style="font-weight: bold">Data de criação:</span> ${
-        despesa.createdAt
+        expense.createdAt
       }</p>
 
       <p><span style="font-weight: bold">Criador pelo ID:</span> ${
-        despesa.createdBy
+        expense.createdBy
       }</p>
 
       <p><span style="font-weight: bold">Valor (R$):</span> ${Util.formatNumberToCurrency(
-        despesa.value,
+        expense.value,
       )}</p>
     </body>
   </html>`;

@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export class NotAllowedToAccessDespesaException extends HttpException {
+export class NotAllowedToAccessExpenseException extends HttpException {
   constructor(message: string) {
     super(message, HttpStatus.NOT_FOUND);
-    this.name = 'NotAllowedToAccessDespesaException';
+    this.name = 'NotAllowedToAccessExpenseException';
   }
 }

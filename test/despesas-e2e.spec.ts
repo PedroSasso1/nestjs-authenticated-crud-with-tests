@@ -3,13 +3,13 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import {
-  createDespesaDtoMock,
-  updateDespesaDtoMock,
-} from './mocks/despesas.mocks';
+  createExpenseDtoMock,
+  updateExpenseDtoMock,
+} from './mocks/expenses.mocks';
 import { isUUID } from 'class-validator';
 import { Util } from '../src/util/util';
 
-describe('Despesas (e2e)', () => {
+describe('Expenses (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -52,11 +52,11 @@ describe('Despesas (e2e)', () => {
     const {
       body: { id: despesaId },
     } = await request(app.getHttpServer())
-      .post('/despesas')
+      .post('/Expenses')
       .set({
         Authorization: `Bearer ${token}`,
       })
-      .send({ ...createDespesaDtoMock, createdBy: id })
+      .send({ ...createExpenseDtoMock, createdBy: id })
       .expect(201);
 
     expect(isUUID(despesaId, 4)).toBeTruthy();
@@ -79,12 +79,12 @@ describe('Despesas (e2e)', () => {
       .send({ username, password })
       .expect(201);
 
-    const createDto = { ...createDespesaDtoMock, createdBy: id };
+    const createDto = { ...createExpenseDtoMock, createdBy: id };
 
     const {
       body: { id: despesaId },
     } = await request(app.getHttpServer())
-      .post('/despesas')
+      .post('/Expenses')
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -92,7 +92,7 @@ describe('Despesas (e2e)', () => {
       .expect(201);
 
     await request(app.getHttpServer())
-      .get(`/despesas/${despesaId}`)
+      .get(`/Expenses/${despesaId}`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -105,7 +105,7 @@ describe('Despesas (e2e)', () => {
       });
   });
 
-  it('should get despesas', async () => {
+  it('should get Expenses', async () => {
     const username = 'user@email.com';
     const password = '123456';
     const {
@@ -122,12 +122,12 @@ describe('Despesas (e2e)', () => {
       .send({ username, password })
       .expect(201);
 
-    const createDto = { ...createDespesaDtoMock, createdBy: id };
+    const createDto = { ...createExpenseDtoMock, createdBy: id };
 
     const {
       body: { id: despesaId },
     } = await request(app.getHttpServer())
-      .post('/despesas')
+      .post('/Expenses')
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -135,7 +135,7 @@ describe('Despesas (e2e)', () => {
       .expect(201);
 
     await request(app.getHttpServer())
-      .get(`/despesas`)
+      .get(`/Expenses`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -167,12 +167,12 @@ describe('Despesas (e2e)', () => {
       .send({ username, password })
       .expect(201);
 
-    const createDto = { ...createDespesaDtoMock, createdBy: id };
+    const createDto = { ...createExpenseDtoMock, createdBy: id };
 
     const {
       body: { id: despesaId },
     } = await request(app.getHttpServer())
-      .post('/despesas')
+      .post('/Expenses')
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -180,14 +180,14 @@ describe('Despesas (e2e)', () => {
       .expect(201);
 
     await request(app.getHttpServer())
-      .delete(`/despesas/${despesaId}`)
+      .delete(`/Expenses/${despesaId}`)
       .set({
         Authorization: `Bearer ${token}`,
       })
       .expect(200);
 
     await request(app.getHttpServer())
-      .get(`/despesas`)
+      .get(`/Expenses`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -211,12 +211,12 @@ describe('Despesas (e2e)', () => {
       .send({ username, password })
       .expect(201);
 
-    const createDto = { ...createDespesaDtoMock, createdBy: id };
+    const createDto = { ...createExpenseDtoMock, createdBy: id };
 
     const {
       body: { id: despesaId },
     } = await request(app.getHttpServer())
-      .post('/despesas')
+      .post('/Expenses')
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -224,15 +224,15 @@ describe('Despesas (e2e)', () => {
       .expect(201);
 
     await request(app.getHttpServer())
-      .put(`/despesas/${despesaId}`)
+      .put(`/Expenses/${despesaId}`)
       .set({
         Authorization: `Bearer ${token}`,
       })
-      .send(updateDespesaDtoMock)
+      .send(updateExpenseDtoMock)
       .expect(200);
 
     await request(app.getHttpServer())
-      .get(`/despesas/${despesaId}`)
+      .get(`/Expenses/${despesaId}`)
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -240,8 +240,8 @@ describe('Despesas (e2e)', () => {
         id: despesaId,
         createdAt: createDto.createdAt,
         createdBy: createDto.createdBy,
-        description: updateDespesaDtoMock.description,
-        value: Util.formatNumberToCurrency(updateDespesaDtoMock.value),
+        description: updateExpenseDtoMock.description,
+        value: Util.formatNumberToCurrency(updateExpenseDtoMock.value),
       });
   });
 });

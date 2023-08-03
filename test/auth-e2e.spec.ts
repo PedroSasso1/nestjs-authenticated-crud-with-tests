@@ -38,7 +38,7 @@ describe('Auth (e2e)', () => {
       .expect(201);
 
     await request(app.getHttpServer())
-      .get('/despesas')
+      .get('/expenses')
       .set({
         Authorization: `Bearer ${token}`,
       })
@@ -47,7 +47,7 @@ describe('Auth (e2e)', () => {
 
   it('should return unauthorized', async () => {
     await request(app.getHttpServer())
-      .get('/despesas')
+      .get('/expenses')
       .set({
         Authorization: `Bearer invalidToken`,
       })

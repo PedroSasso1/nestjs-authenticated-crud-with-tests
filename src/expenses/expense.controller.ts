@@ -34,8 +34,8 @@ export class ExpensesController {
   @Get(':id')
   @UseGuards(JwtGuard)
   async findOne(@Req() req: any, @Param('id') id: string) {
-    const despesa = await this.expensesService.findOne(id, req['user']['sub']);
-    return despesa;
+    const expense = await this.expensesService.findOne(id, req['user']['sub']);
+    return expense;
   }
 
   @Put(':id')

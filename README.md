@@ -3,6 +3,8 @@ This is a REST API for expenses authenticated by jwt, this app also holds a mail
 
 ## Documentation
 
+Published API: https://documenter.getpostman.com/view/26232812/2s9XxwwuF8
+There is also a postman json collection on root folder
 
 ## Installation
 

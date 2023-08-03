@@ -14,7 +14,7 @@ $ npm install
 
 ## Configuring
 
-1. You will to fill your .env file
+1. You will need to fill your .env file with the following information
 
 SES_SOURCE must be an authenticated ses source for sending emails in aws
 

@@ -1,4 +1,4 @@
-import { UserValidationException } from '../../errors/user-validation-exception';
+import { UserValidationException } from '../errors/user-validation.exception';
 import { validUserMock } from '../../../test/mocks/user.mocks';
 import { User, UserProps } from './user.entity';
 

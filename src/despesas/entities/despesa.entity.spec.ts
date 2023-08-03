@@ -1,5 +1,5 @@
 import { validDespesaMock } from '../../../test/mocks/despesas.mocks';
-import { DespesasValidationException } from '../errors/despesas-validation-exception';
+import { DespesasValidationException } from '../errors/despesas-validation.exception';
 import { Despesa, DespesaProps } from './despesa.entity';
 
 describe('Despesa Entity - Unit Tests', () => {
@@ -10,7 +10,9 @@ describe('Despesa Entity - Unit Tests', () => {
         ...validDespesaMock,
         id: invalidId,
       };
-      expect(() => new Despesa(invalidDespesaProps)).toThrow();
+      expect(() => new Despesa(invalidDespesaProps)).toThrow(
+        DespesasValidationException,
+      );
     });
 
     test("shouldn't be empty", () => {
@@ -45,7 +47,7 @@ describe('Despesa Entity - Unit Tests', () => {
             ...validDespesaMock,
             description: invalidTypeDescription,
           }),
-      ).toThrow();
+      ).toThrow(DespesasValidationException);
     });
     it("shouldn't pass 191 string length", () => {
       let invalidLengthDescription = '';
@@ -59,7 +61,7 @@ describe('Despesa Entity - Unit Tests', () => {
             ...validDespesaMock,
             description: invalidLengthDescription,
           }),
-      ).toThrow();
+      ).toThrow(DespesasValidationException);
     });
   });
 
@@ -72,7 +74,7 @@ describe('Despesa Entity - Unit Tests', () => {
             ...validDespesaMock,
             createdAt: invalidTypeCreatedAt,
           }),
-      ).toThrow();
+      ).toThrow(DespesasValidationException);
     });
     it("createdAt can't be future", () => {
       const now = new Date();
@@ -86,7 +88,7 @@ describe('Despesa Entity - Unit Tests', () => {
             ...validDespesaMock,
             createdAt: future,
           }),
-      ).toThrow();
+      ).toThrow(DespesasValidationException);
       jest.useRealTimers();
     });
   });
@@ -98,7 +100,9 @@ describe('Despesa Entity - Unit Tests', () => {
         ...validDespesaMock,
         createdBy: createdBy,
       };
-      expect(() => new Despesa(invalidDespesaProps)).toThrow();
+      expect(() => new Despesa(invalidDespesaProps)).toThrow(
+        DespesasValidationException,
+      );
     });
 
     test("shouldn't be empty", () => {
@@ -131,7 +135,9 @@ describe('Despesa Entity - Unit Tests', () => {
         ...validDespesaMock,
         value: invalidTypeValue,
       };
-      expect(() => new Despesa(invalidDespesaProps)).toThrow();
+      expect(() => new Despesa(invalidDespesaProps)).toThrow(
+        DespesasValidationException,
+      );
     });
     it("shouldn't be less than 0", () => {
       const invalidMinValue = 0;
@@ -139,7 +145,20 @@ describe('Despesa Entity - Unit Tests', () => {
         ...validDespesaMock,
         value: invalidMinValue,
       };
-      expect(() => new Despesa(invalidDespesaProps)).toThrow();
+      expect(() => new Despesa(invalidDespesaProps)).toThrow(
+        DespesasValidationException,
+      );
+    });
+
+    it("shouldn't be negative number", () => {
+      const invalidMinValue = -1;
+      const invalidDespesaProps: DespesaProps = {
+        ...validDespesaMock,
+        value: invalidMinValue,
+      };
+      expect(() => new Despesa(invalidDespesaProps)).toThrow(
+        DespesasValidationException,
+      );
     });
   });
 

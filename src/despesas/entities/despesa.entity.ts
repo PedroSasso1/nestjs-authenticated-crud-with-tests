@@ -2,6 +2,7 @@ import {
   IsDate,
   IsNotEmpty,
   IsNumber,
+  IsPositive,
   IsString,
   IsUUID,
   MaxDate,
@@ -9,7 +10,8 @@ import {
   Min,
   validateSync,
 } from 'class-validator';
-import { DespesasValidationException } from '../errors/despesas-validation-exception';
+import { DespesasValidationException } from '../errors/despesas-validation.exception';
+import { Util } from '../../util/util';
 
 export type DespesaProps = {
   id: string;
@@ -38,7 +40,7 @@ export class Despesa {
   description: string;
 
   @IsDate()
-  @MaxDate(new Date())
+  @MaxDate(Util.dateAddMinutes(new Date()))
   createdAt: Date;
 
   @IsString()
@@ -47,6 +49,7 @@ export class Despesa {
   createdBy: string;
 
   @IsNumber()
+  @IsPositive()
   @Min(0.01)
   value: number;
 

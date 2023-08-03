@@ -5,7 +5,7 @@ import {
   IsUUID,
   validateSync,
 } from 'class-validator';
-import { UserValidationException } from '../../errors/user-validation-exception';
+import { UserValidationException } from '../errors/user-validation.exception';
 
 export type UserProps = {
   id: string;

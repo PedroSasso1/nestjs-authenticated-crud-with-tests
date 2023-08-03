@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../../users/users.service';
 import { compare } from 'bcrypt';
-import { InvalidCredentialsException } from '../../errors/invalid-credentials-exception';
-import { UserNotFoundException } from '../../errors/user-not-found-exception';
+import { InvalidCredentialsException } from '../errors/invalid-credentials.exception';
+import { UserNotFoundException } from '../../users/errors/user-not-found.exception';
 
 @Injectable()
 export class AuthService {

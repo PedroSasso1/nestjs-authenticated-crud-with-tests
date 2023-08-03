@@ -7,8 +7,8 @@ import {
 import { v4 as uuidV4 } from 'uuid';
 import { isUUID } from 'class-validator';
 import * as bcrypt from 'bcrypt';
-import { UserValidationException } from '../errors/user-validation-exception';
-import { UserExistsException } from '../errors/user-exists-exception';
+import { UserValidationException } from './errors/user-validation.exception';
+import { UserExistsException } from './errors/user-exists.exception';
 
 describe('UsersService', () => {
   let service: UsersService;

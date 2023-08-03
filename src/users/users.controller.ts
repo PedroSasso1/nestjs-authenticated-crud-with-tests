@@ -9,14 +9,7 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    try {
-      return { id: await this.usersService.create(createUserDto) };
-    } catch (error) {
-      return {
-        errorMessage: error.message,
-        statusCode: error?.status || 500,
-      };
-    }
+    return { id: await this.usersService.create(createUserDto) };
   }
 
   @Get()
@@ -27,33 +20,19 @@ export class UsersController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    try {
-      const user = await this.usersService.findOne(id);
-      if (!user) {
-        throw new UserNotFoundException(`User not found with ID: ${id}`);
-      }
-      return { id: user.id, email: user.email };
-    } catch (error) {
-      return {
-        errorMessage: error.message,
-        statusCode: error?.status || 500,
-      };
+    const user = await this.usersService.findOne(id);
+    if (!user) {
+      throw new UserNotFoundException(`User not found with ID: ${id}`);
     }
+    return { id: user.id, email: user.email };
   }
 
   @Get('email/:email')
   async findOneByEmail(@Param('email') email: string) {
-    try {
-      const user = await this.usersService.findOneByEmail(email);
-      if (!user) {
-        throw new UserNotFoundException(`User not found with email: ${email}`);
-      }
-      return { id: user.id, email: user.email };
-    } catch (error) {
-      return {
-        errorMessage: error.message,
-        statusCode: error?.status || 500,
-      };
+    const user = await this.usersService.findOneByEmail(email);
+    if (!user) {
+      throw new UserNotFoundException(`User not found with email: ${email}`);
     }
+    return { id: user.id, email: user.email };
   }
 }

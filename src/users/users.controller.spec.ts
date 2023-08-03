@@ -7,6 +7,7 @@ import {
 } from '../../test/mocks/user.mocks';
 import { isUUID } from 'class-validator';
 import { v4 as uuidV4 } from 'uuid';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -25,10 +26,9 @@ describe('UsersController', () => {
   });
 
   it('should return error on create when user has invalid props', async () => {
-    const response = await controller.create(invalidCreateUserDto);
-    expect(response.errorMessage).toMatch(/email/);
-    expect(response.errorMessage).toMatch(/password/);
-    expect(response.statusCode).toBe(422);
+    expect(controller.create(invalidCreateUserDto)).rejects.toThrow(
+      HttpException,
+    );
   });
   it('should create a new user', async () => {
     const { id } = await controller.create(validCreateUserDto);
@@ -37,17 +37,19 @@ describe('UsersController', () => {
 
   it('should return error on create when creating a new user with existent email', async () => {
     await controller.create(validCreateUserDto);
-    const response = await controller.create(validCreateUserDto);
-
-    expect(response.statusCode).toBe(409);
-    expect(response.errorMessage).toBe('email is taken');
+    expect(controller.create(validCreateUserDto)).rejects.toThrow(
+      new HttpException('email is taken', HttpStatus.CONFLICT),
+    );
   });
 
   it('should return error on find by id when user not found', async () => {
     const notFoundId = uuidV4();
-    const response = await controller.findOne(notFoundId);
-    expect(response.errorMessage).toBe(`User not found with ID: ${notFoundId}`);
-    expect(response.statusCode).toBe(404);
+    expect(controller.findOne(notFoundId)).rejects.toThrow(
+      new HttpException(
+        `User not found with ID: ${notFoundId}`,
+        HttpStatus.NOT_FOUND,
+      ),
+    );
   });
 
   it('should find a user by id', async () => {
@@ -61,11 +63,12 @@ describe('UsersController', () => {
 
   it('should throw error on find by email when user not found', async () => {
     const notFoundEmail = 'test@email.com';
-    const response = await controller.findOneByEmail(notFoundEmail);
-    expect(response.errorMessage).toBe(
-      `User not found with email: ${notFoundEmail}`,
+    expect(controller.findOneByEmail(notFoundEmail)).rejects.toThrow(
+      new HttpException(
+        `User not found with email: ${notFoundEmail}`,
+        HttpStatus.NOT_FOUND,
+      ),
     );
-    expect(response.statusCode).toBe(404);
   });
 
   it('should find a user by email', async () => {

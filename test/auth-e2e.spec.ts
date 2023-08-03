@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-describe('AppController (e2e)', () => {
+describe('Auth (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -43,5 +43,14 @@ describe('AppController (e2e)', () => {
         Authorization: `Bearer ${token}`,
       })
       .expect(200);
+  });
+
+  it('should return unauthorized', async () => {
+    await request(app.getHttpServer())
+      .get('/despesas')
+      .set({
+        Authorization: `Bearer invalidToken`,
+      })
+      .expect(401);
   });
 });

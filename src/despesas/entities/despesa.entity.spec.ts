@@ -1,21 +1,38 @@
+import { validDespesaMock } from '../../../test/mocks/despesas.mocks';
+import { DespesasValidationException } from '../errors/despesas-validation-exception';
 import { Despesa, DespesaProps } from './despesa.entity';
 
-const validDespesa: DespesaProps = {
-  id: 1,
-  description: 'despesa description',
-  createdAt: new Date(),
-  createdBy: 1,
-  value: 10,
-};
 describe('Despesa Entity - Unit Tests', () => {
   describe('should invalidate id', () => {
     it('should be number', () => {
-      const invalidId: any = '';
+      const invalidId: any = 0;
       const invalidDespesaProps: DespesaProps = {
-        ...validDespesa,
+        ...validDespesaMock,
         id: invalidId,
       };
       expect(() => new Despesa(invalidDespesaProps)).toThrow();
+    });
+
+    test("shouldn't be empty", () => {
+      const invalidEmptyId = '';
+      const invalidDespesaProps: DespesaProps = {
+        ...validDespesaMock,
+        id: invalidEmptyId,
+      };
+      expect(() => new Despesa(invalidDespesaProps)).toThrow(
+        DespesasValidationException,
+      );
+    });
+
+    test('should be uuid v4', () => {
+      const invalidUUID = 'invalid uuid';
+      const invalidDespesaProps: DespesaProps = {
+        ...validDespesaMock,
+        id: invalidUUID,
+      };
+      expect(() => new Despesa(invalidDespesaProps)).toThrow(
+        DespesasValidationException,
+      );
     });
   });
 
@@ -25,7 +42,7 @@ describe('Despesa Entity - Unit Tests', () => {
       expect(
         () =>
           new Despesa({
-            ...validDespesa,
+            ...validDespesaMock,
             description: invalidTypeDescription,
           }),
       ).toThrow();
@@ -39,7 +56,7 @@ describe('Despesa Entity - Unit Tests', () => {
       expect(
         () =>
           new Despesa({
-            ...validDespesa,
+            ...validDespesaMock,
             description: invalidLengthDescription,
           }),
       ).toThrow();
@@ -52,7 +69,7 @@ describe('Despesa Entity - Unit Tests', () => {
       expect(
         () =>
           new Despesa({
-            ...validDespesa,
+            ...validDespesaMock,
             createdAt: invalidTypeCreatedAt,
           }),
       ).toThrow();
@@ -66,7 +83,7 @@ describe('Despesa Entity - Unit Tests', () => {
       expect(
         () =>
           new Despesa({
-            ...validDespesa,
+            ...validDespesaMock,
             createdAt: future,
           }),
       ).toThrow();
@@ -76,12 +93,34 @@ describe('Despesa Entity - Unit Tests', () => {
 
   describe('should invalidate createdBy', () => {
     it('should be number', () => {
-      const invalidTypeCreatedBy: any = '';
+      const createdBy: any = 0;
       const invalidDespesaProps: DespesaProps = {
-        ...validDespesa,
-        createdBy: invalidTypeCreatedBy,
+        ...validDespesaMock,
+        createdBy: createdBy,
       };
       expect(() => new Despesa(invalidDespesaProps)).toThrow();
+    });
+
+    test("shouldn't be empty", () => {
+      const invalidEmptyCreatedBy = '';
+      const invalidDespesaProps: DespesaProps = {
+        ...validDespesaMock,
+        createdBy: invalidEmptyCreatedBy,
+      };
+      expect(() => new Despesa(invalidDespesaProps)).toThrow(
+        DespesasValidationException,
+      );
+    });
+
+    test('should be uuid v4', () => {
+      const invalidUUID = 'invalid uuid';
+      const invalidDespesaProps: DespesaProps = {
+        ...validDespesaMock,
+        createdBy: invalidUUID,
+      };
+      expect(() => new Despesa(invalidDespesaProps)).toThrow(
+        DespesasValidationException,
+      );
     });
   });
 
@@ -89,7 +128,7 @@ describe('Despesa Entity - Unit Tests', () => {
     it('should be number', () => {
       const invalidTypeValue: any = '';
       const invalidDespesaProps: DespesaProps = {
-        ...validDespesa,
+        ...validDespesaMock,
         value: invalidTypeValue,
       };
       expect(() => new Despesa(invalidDespesaProps)).toThrow();
@@ -97,7 +136,7 @@ describe('Despesa Entity - Unit Tests', () => {
     it("shouldn't be less than 0", () => {
       const invalidMinValue = 0;
       const invalidDespesaProps: DespesaProps = {
-        ...validDespesa,
+        ...validDespesaMock,
         value: invalidMinValue,
       };
       expect(() => new Despesa(invalidDespesaProps)).toThrow();
@@ -105,12 +144,12 @@ describe('Despesa Entity - Unit Tests', () => {
   });
 
   it('should create valid instance of Despesa', () => {
-    const despesa = new Despesa(validDespesa);
+    const despesa = new Despesa(validDespesaMock);
 
-    expect(despesa.id).toBe(validDespesa.id);
-    expect(despesa.description).toBe(validDespesa.description);
-    expect(despesa.createdAt).toBe(validDespesa.createdAt);
-    expect(despesa.createdBy).toBe(validDespesa.createdBy);
-    expect(despesa.value).toBe(validDespesa.value);
+    expect(despesa.id).toBe(validDespesaMock.id);
+    expect(despesa.description).toBe(validDespesaMock.description);
+    expect(despesa.createdAt).toBe(validDespesaMock.createdAt);
+    expect(despesa.createdBy).toBe(validDespesaMock.createdBy);
+    expect(despesa.value).toBe(validDespesaMock.value);
   });
 });

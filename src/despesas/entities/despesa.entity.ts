@@ -1,22 +1,24 @@
 import {
   IsDate,
+  IsNotEmpty,
   IsNumber,
   IsString,
+  IsUUID,
   MaxDate,
   MaxLength,
   Min,
   validateSync,
 } from 'class-validator';
-import { Entity } from 'src/@shared/entity-contract';
+import { DespesasValidationException } from '../errors/despesas-validation-exception';
 
 export type DespesaProps = {
-  id: number;
+  id: string;
   description: string;
   createdAt: Date;
-  createdBy: number;
+  createdBy: string;
   value: number;
 };
-export class Despesa implements Entity {
+export class Despesa {
   constructor(props: DespesaProps) {
     this.id = props.id;
     this.description = props.description;
@@ -26,8 +28,10 @@ export class Despesa implements Entity {
     this.validator();
   }
 
-  @IsNumber()
-  id: number;
+  @IsString()
+  @IsNotEmpty()
+  @IsUUID(4)
+  id: string;
 
   @IsString()
   @MaxLength(191)
@@ -37,8 +41,10 @@ export class Despesa implements Entity {
   @MaxDate(new Date())
   createdAt: Date;
 
-  @IsNumber()
-  createdBy: number;
+  @IsString()
+  @IsNotEmpty()
+  @IsUUID(4)
+  createdBy: string;
 
   @IsNumber()
   @Min(0.01)
@@ -50,7 +56,7 @@ export class Despesa implements Entity {
       .join('');
 
     if (errors.length > 0) {
-      throw new Error(errors);
+      throw new DespesasValidationException(errors);
     }
 
     return;

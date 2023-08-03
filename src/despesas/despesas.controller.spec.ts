@@ -15,6 +15,8 @@ import { isUUID } from 'class-validator';
 import { UpdateDespesaDto } from './dto/update-despesa.dto';
 import { AuthModule } from '../auth/auth.module';
 import { Util } from '../util/util';
+import { MailerModule } from '../mailer/mailer.module';
+import { ConfigModule } from '@nestjs/config';
 
 describe('DespesasController', () => {
   let controller: DespesasController;
@@ -22,7 +24,7 @@ describe('DespesasController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [UsersModule, AuthModule],
+      imports: [ConfigModule.forRoot(), UsersModule, AuthModule, MailerModule],
       controllers: [DespesasController],
       providers: [DespesasService],
     }).compile();

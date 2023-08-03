@@ -14,6 +14,8 @@ import {
 import { DespesaNotFoundException } from './errors/despesa-not-found.exception';
 import { UpdateDespesaDto } from './dto/update-despesa.dto';
 import { Util } from '../util/util';
+import { MailerModule } from '../mailer/mailer.module';
+import { ConfigModule } from '@nestjs/config';
 
 describe('DespesasService', () => {
   let service: DespesasService;
@@ -21,7 +23,7 @@ describe('DespesasService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [UsersModule],
+      imports: [ConfigModule.forRoot(), UsersModule, MailerModule],
       providers: [DespesasService],
     }).compile();
 

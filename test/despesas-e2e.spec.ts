@@ -33,7 +33,7 @@ describe('Despesas (e2e)', () => {
   });
 
   it('should create a despesa', async () => {
-    const username = 'user@email.com';
+    const username = 'pedrosassom@outlook.com';
     const password = '123456';
     const {
       body: { id },

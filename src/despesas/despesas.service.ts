@@ -8,12 +8,16 @@ import { v4 as uuidV4 } from 'uuid';
 import { DespesaNotFoundException } from './errors/despesa-not-found.exception';
 import { Util } from '../util/util';
 import { NotAllowedToAccessDespesaException } from './errors/despesa-not-allowed-access.exception';
+import { MailerService } from '../mailer/mailer.service';
 
 @Injectable()
 export class DespesasService {
   despesasInMemoryTable: Partial<Despesa>[] = [];
 
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private mailerService: MailerService,
+  ) {}
 
   async create(createDespesaDto: CreateDespesaDto) {
     const user = await this.usersService.findOne(createDespesaDto.createdBy);
@@ -32,6 +36,12 @@ export class DespesasService {
     });
 
     this.despesasInMemoryTable.push(despesa);
+
+    await this.mailerService.sendEmail({
+      body: Util.getDespesaMailBody(despesa),
+      subject: 'Despesa cadastrada!',
+      toAddresses: [user.email],
+    });
 
     return despesa.id;
   }

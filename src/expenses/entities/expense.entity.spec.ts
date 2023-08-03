@@ -1,5 +1,5 @@
 import { validExpenseMock } from '../../../test/mocks/expenses.mocks';
-import { ExpensesValidationException } from '../errors/expenses-validation.exception';
+import { ExpenseValidationException } from '../errors/expense-validation.exception';
 import { Expense, ExpenseProps } from './expense.entity';
 
 describe('Expense Entity - Unit Tests', () => {
@@ -11,7 +11,7 @@ describe('Expense Entity - Unit Tests', () => {
         id: invalidId,
       };
       expect(() => new Expense(invalidExpenseProps)).toThrow(
-        ExpensesValidationException,
+        ExpenseValidationException,
       );
     });
 
@@ -22,7 +22,7 @@ describe('Expense Entity - Unit Tests', () => {
         id: invalidEmptyId,
       };
       expect(() => new Expense(invalidExpenseProps)).toThrow(
-        ExpensesValidationException,
+        ExpenseValidationException,
       );
     });
 
@@ -33,7 +33,7 @@ describe('Expense Entity - Unit Tests', () => {
         id: invalidUUID,
       };
       expect(() => new Expense(invalidExpenseProps)).toThrow(
-        ExpensesValidationException,
+        ExpenseValidationException,
       );
     });
   });
@@ -47,7 +47,7 @@ describe('Expense Entity - Unit Tests', () => {
             ...validExpenseMock,
             description: invalidTypeDescription,
           }),
-      ).toThrow(ExpensesValidationException);
+      ).toThrow(ExpenseValidationException);
     });
     it("shouldn't pass 191 string length", () => {
       let invalidLengthDescription = '';
@@ -61,7 +61,7 @@ describe('Expense Entity - Unit Tests', () => {
             ...validExpenseMock,
             description: invalidLengthDescription,
           }),
-      ).toThrow(ExpensesValidationException);
+      ).toThrow(ExpenseValidationException);
     });
   });
 
@@ -74,7 +74,7 @@ describe('Expense Entity - Unit Tests', () => {
             ...validExpenseMock,
             createdAt: invalidTypeCreatedAt,
           }),
-      ).toThrow(ExpensesValidationException);
+      ).toThrow(ExpenseValidationException);
     });
     it("createdAt can't be future", () => {
       const now = new Date();
@@ -88,7 +88,7 @@ describe('Expense Entity - Unit Tests', () => {
             ...validExpenseMock,
             createdAt: future,
           }),
-      ).toThrow(ExpensesValidationException);
+      ).toThrow(ExpenseValidationException);
       jest.useRealTimers();
     });
   });
@@ -101,7 +101,7 @@ describe('Expense Entity - Unit Tests', () => {
         createdBy: createdBy,
       };
       expect(() => new Expense(invalidExpenseProps)).toThrow(
-        ExpensesValidationException,
+        ExpenseValidationException,
       );
     });
 
@@ -112,7 +112,7 @@ describe('Expense Entity - Unit Tests', () => {
         createdBy: invalidEmptyCreatedBy,
       };
       expect(() => new Expense(invalidExpenseProps)).toThrow(
-        ExpensesValidationException,
+        ExpenseValidationException,
       );
     });
 
@@ -123,7 +123,7 @@ describe('Expense Entity - Unit Tests', () => {
         createdBy: invalidUUID,
       };
       expect(() => new Expense(invalidExpenseProps)).toThrow(
-        ExpensesValidationException,
+        ExpenseValidationException,
       );
     });
   });
@@ -136,7 +136,7 @@ describe('Expense Entity - Unit Tests', () => {
         value: invalidTypeValue,
       };
       expect(() => new Expense(invalidExpenseProps)).toThrow(
-        ExpensesValidationException,
+        ExpenseValidationException,
       );
     });
     it("shouldn't be less than 0", () => {
@@ -146,7 +146,7 @@ describe('Expense Entity - Unit Tests', () => {
         value: invalidMinValue,
       };
       expect(() => new Expense(invalidExpenseProps)).toThrow(
-        ExpensesValidationException,
+        ExpenseValidationException,
       );
     });
 
@@ -157,18 +157,18 @@ describe('Expense Entity - Unit Tests', () => {
         value: invalidMinValue,
       };
       expect(() => new Expense(invalidExpenseProps)).toThrow(
-        ExpensesValidationException,
+        ExpenseValidationException,
       );
     });
   });
 
   it('should create valid instance of Expense', () => {
-    const Expense = new Expense(validExpenseMock);
+    const expense = new Expense(validExpenseMock);
 
-    expect(Expense.id).toBe(validExpenseMock.id);
-    expect(Expense.description).toBe(validExpenseMock.description);
-    expect(Expense.createdAt).toBe(validExpenseMock.createdAt);
-    expect(Expense.createdBy).toBe(validExpenseMock.createdBy);
-    expect(Expense.value).toBe(validExpenseMock.value);
+    expect(expense.id).toBe(validExpenseMock.id);
+    expect(expense.description).toBe(validExpenseMock.description);
+    expect(expense.createdAt).toBe(validExpenseMock.createdAt);
+    expect(expense.createdBy).toBe(validExpenseMock.createdBy);
+    expect(expense.value).toBe(validExpenseMock.value);
   });
 });
